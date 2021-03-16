@@ -3,14 +3,18 @@
 #include <cstdlib>
 #include <ctime>
 #include <limits>
+#include <vector>
+#include <array>
 
 using std::cout;
 using std::cin;
 using std::endl;
+using std::vector;
+using std::array;
 
-void print_results(int guesses[], int guess_count, int SIZE) {
+void print_results(array<int, 1001> guesses, int size) {
     
-    for (int z = 0; z < guess_count / sizeof(int); z++) {
+    for (int z = 0; z < size; z++) {
 
         cout << "Guess " << z + 1 << ": " << guesses[z] << endl;
     }
@@ -20,8 +24,8 @@ int play_game() {
 
     const int SIZE = 1000;
     
-    int guesses[SIZE];
-    int guess_count = 0;
+    array<int, 1001> guesses;
+    int count = 0;
     int random = rand() % 1001;
     int guess = 0;
     int score = 0;
@@ -35,7 +39,7 @@ int play_game() {
         cin.clear();
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-        guesses[guess_count++] = guess;
+        guesses[count++] = guess;
 
         if (guess == random) {
             cout << "\nYou guessed the right number!" << endl << endl;
@@ -51,7 +55,7 @@ int play_game() {
             cout << "\nThe number was too high." << endl << "Try again: " << std::flush;
         }
 
-        if (guess_count == SIZE - 1) {
+        if (guesses.size() == SIZE - 1) {
             cout << "\nYou failed to guess a number after" << SIZE << "tries! How is that possible?";
             break;
         }
@@ -59,7 +63,7 @@ int play_game() {
 
     cout << "Your guesses:" << endl;
 
-    print_results(guesses, guess_count, SIZE);
+    print_results(guesses, count);
 
     for (int z = 0; z < sizeof(guesses) / sizeof(int); z++) {
 
