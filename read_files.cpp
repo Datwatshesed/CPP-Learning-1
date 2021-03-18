@@ -17,7 +17,7 @@ int main() {
     
     file.open("executables/gay.txt");
 
-    while (getline(file, input)) {
+    while (file >> input) {
         names.push_back(input);
     }
 
