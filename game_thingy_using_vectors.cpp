@@ -88,9 +88,9 @@ void play_game() {
     int random = rand() % 1001;
     int guess = 0;
     int score = 0;
-    cout << "random num: " << random << endl;
+    // cout << "random num: " << random << endl;
 
-    cout << "\nGuess a number: " << std::flush;
+    cout << "\nGuess a number between 1 and 1000: " << std::flush;
 
     while (true) {
 
