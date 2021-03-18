@@ -4,13 +4,15 @@
 #include <ctime>
 #include <limits>
 #include <vector>
+#include <fstream>
 
 using std::cout;
 using std::cin;
 using std::endl;
 using std::vector;
+using std::string;
 
-void print_results(vector<int> guesses) {
+void print_all_guesses(vector<int> guesses) {
     
     for (int z = 0; z < guesses.size(); z++) {
 
@@ -18,7 +20,67 @@ void print_results(vector<int> guesses) {
     }
 }
 
-int play_game() {
+void compare_scores(int current_score) {
+
+    std::ofstream write_file;
+    std::ifstream read_file;
+    string filename = "scores.txt";
+    int high_score; 
+
+    read_file.open(filename);
+
+    if (read_file) {
+        cout << "\nscores.txt opened successfully." << endl;
+    }
+
+    else {
+        write_file.open(filename);
+
+        if (!write_file) {
+            cout << "Error opening scores.txt.\nExiting game now. Sorry." << endl;
+            exit;
+        }
+
+        write_file.close();
+
+        read_file.open(filename);
+    }
+
+    cout << "\nYour Score: " << current_score << endl;
+    read_file >> high_score;
+
+    if (high_score > current_score || high_score == 0) {
+        if (high_score != 0) {
+            cout << "You Have The New High Score!" << '\n';
+            cout << "\nPrevious High Score: " << high_score << endl;
+        }
+        
+        high_score = current_score;
+        read_file.close();
+
+        write_file.open(filename);
+
+        if (!write_file) {
+            cout << "Error opening scores.txt.\nExiting game now. Sorry." << endl;
+            exit;
+        }
+
+        write_file << high_score << '\n'; 
+        write_file.close();
+    }
+
+    else if (high_score == current_score) {
+        cout << "You have the same score as the high score" << endl;
+        read_file.close();
+    }
+
+    else {
+        cout << "High Score: " << high_score << endl;
+        read_file.close();
+    }
+}
+
+void play_game() {
 
     const int SIZE = 1000;
     
@@ -28,7 +90,7 @@ int play_game() {
     int score = 0;
     cout << "random num: " << random << endl;
 
-    cout << "Guess a number: " << std::flush;
+    cout << "\nGuess a number: " << std::flush;
 
     while (true) {
 
@@ -60,43 +122,32 @@ int play_game() {
 
     cout << "Your guesses:" << endl;
 
-    print_results(guesses);
+    print_all_guesses(guesses);
 
-    for (int z = 0; z < sizeof(guesses) / sizeof(int); z++) {
-
-        if (guesses[z] == 0 or guesses[z] > 1000) {
-            break;
-        }
-
-        cout << "Guess " << z + 1 << ": " << guesses[z] << endl;
-    }
-
-    return score;
+    compare_scores(guesses.size());
 }
 
 int main() {
 
     int choice;
-    int score = 0;
 
     srand(time(NULL));
 
     do {
-        cout << "score: " << score << endl << endl;
-        cout << "0. Quit" << endl;
+        cout << "\n0. Quit" << endl;
         cout << "1. Play" << endl;
 
-        cout << "Choice: " << std::flush;
+        cout << "\nChoice: " << std::flush;
         cin >> choice;
 
         switch(choice) {
             case 0:
-                cout << "Goodbye." << endl;
+                cout << "\nGoodbye." << endl;
                 return 0;
             
             case 1:
-                cout << "Let's play!" << endl;
-                score += play_game();
+                cout << "\nLet's play!" << endl;
+                play_game();
                 break;
 
             default:
